@@ -5,16 +5,57 @@ import { knex } from "../database"
 import crypto from "node:crypto"
 
 export async function snackRoutes(app: FastifyInstance) {
-	// {
-	//     id,
-	//     name,
-	//     description,
-	//     datetime,
-	//     is_in_diet
-	// }
-
 	app.addHook("preHandler", async (request, reply) => {
 		checkSessionIdExists(request, reply)
+	})
+
+	app.get("/", async (request, reply) => {
+		const userId: string | undefined = request.cookies.sessionId
+
+		if (!userId) reply.status(401).send()
+
+		const snacks = await knex("diet_logs").where("user_id", userId).select("*")
+
+		reply.status(200).send(snacks)
+	})
+
+	app.put("/:id", async (request, reply) => {
+		const userId: string | undefined = request.cookies.sessionId
+		const createParamsSchema = z.object({
+			id: z.string(),
+		})
+		const { id } = createParamsSchema.parse(request.params)
+
+		if (!userId || id === "") reply.status(401).send()
+
+		const createSnackSchema = z.object({
+			name: z.string(),
+			description: z.string(),
+			hour: z.number(),
+			date: z.string(),
+			isInDiet: z.boolean(),
+		})
+
+		const { name, description, hour, date, isInDiet } = createSnackSchema.parse(
+			request.body,
+		)
+
+		const [day, month, year] = date.split("/").map(Number)
+		const datetime: number = new Date(year, month - 1, day).setHours(hour)
+
+		try {
+			await knex("diet_logs").where("id", id).update({
+				name,
+				description,
+				datetime,
+				is_in_diet: isInDiet,
+				// user_id: userId,
+			})
+
+			reply.status(200).send()
+		} catch (error) {
+			reply.status(400).send({ error })
+		}
 	})
 
 	app.post("/", async (request, reply) => {
@@ -32,9 +73,7 @@ export async function snackRoutes(app: FastifyInstance) {
 
 		const [day, month, year] = date.split("/").map(Number)
 
-		const timestamp: Date = new Date(
-			new Date(year, month - 1, day).setHours(hour),
-		)
+		const timestamp: number = new Date(year, month - 1, day).setHours(hour)
 
 		const userId: string | undefined = request.cookies.sessionId
 

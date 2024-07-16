@@ -5,7 +5,7 @@
 - [x] Create new snack
 - [ ] Edit snack
 - [ ] Del snack
-- [ ] List all snack
+- [x] List all snack
 - [ ] Get all metrics from snack
 
 # RN

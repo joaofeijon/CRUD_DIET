@@ -5,7 +5,7 @@ export async function up(knex: Knex): Promise<void> {
 		table.uuid("id").primary() // Definindo o ID como string e chave primária
 		table.string("name").notNullable()
 		table.string("description").notNullable()
-		table.timestamp("datetime").notNullable()
+		table.integer("datetime").notNullable()
 		table.boolean("is_in_diet").notNullable()
 		table.uuid("user_id").notNullable()
 
