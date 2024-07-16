@@ -3,16 +3,17 @@
 - [x] Create new User
 - [x] Login User
 - [x] Create new snack
-- [ ] Edit snack
-- [ ] Del snack
+- [x] Edit snack
+- [x] Del snack
 - [x] List all snack
-- [ ] Get all metrics from snack
+- [x] List one snack
+- [x] Get all metrics from snack
 
 # RN
 
 - [x] Identifie user in requisitions
-- [ ] Difference from all snacks if is Diet or not Diet
-- [ ] User only view, edit and delete your diet
+- [x] Difference from all snacks if is Diet or not Diet
+- [x] User only view, edit and delete your diet
 
 # RNF
 
